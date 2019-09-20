@@ -1,0 +1,50 @@
+import java.util.*;
+public class Main{
+    private static class Node{
+        char val;
+        Node left=null;
+        Node right=null;
+        private Node(char val){
+            this.val=val;
+        }
+    } 
+    private static class RT{
+        int used;
+        Node root;
+        private RT(Node root,int used){
+            this.root=root;
+            this.used=used;
+        }
+    }
+    private static RT buildTree(char[] preorder){
+        if(preorder.length==0){
+            RT rt=new RT(null,0);
+            return rt;
+        }
+        if(preorder[0]=='#'){
+            RT rt=new RT(null,1);
+            return rt;
+        }
+        Node root=new Node(preorder[0]);
+        RT left=buildTree(Arrays.copyOfRange(preorder,1,preorder.length));
+        RT right=buildTree(Arrays.copyOfRange(preorder,left.used+1,preorder.length));
+        root.left=left.root;
+        root.right=right.root;
+        return new RT(root,1+left.used+right.used);
+    }
+    private static void inorder(Node root){
+        if(root==null){
+            return;
+        }
+        inorder(root.left);
+        System.out.print(root.val+" ");
+        inorder(root.right);
+    }
+    public static void main(String[] args){
+        Scanner scanner=new Scanner(System.in);
+        String line=scanner.nextLine();
+        char[] Chararray=line.toCharArray();
+        RT rt=buildTree(Chararray);
+        inorder(rt.root);
+    }
+}
